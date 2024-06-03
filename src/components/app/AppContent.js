@@ -13,6 +13,7 @@ import {AuthProvider, useAuth} from "../auth/AuthProvider";
 import {ProfileProvider} from "../user/ProfileContext";
 import GoogleLoginComponent from "../auth/GoogleLoginComponent";
 import AddGood from "../good/AddGood";
+import AddPrice from "../price/AddPrice";
 
 
 
@@ -32,6 +33,7 @@ const AppContent = () => {
                             <Route path="/good/add" element={<AddGood />} />
                             <Route path="/profile" element={ <ProfileProvider> <Profile/>  </ProfileProvider>} />
                             <Route path="/profile/edit" element={<ProfileProvider>  <EditProfile />  </ProfileProvider>} />
+                            <Route path="/price/add" element={<AddPrice/>}></Route>
                         </Routes>
                     </Router>
                 </div>

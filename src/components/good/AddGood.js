@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { request } from '../../helpers/axios_helper';
+import {useNavigate} from "react-router-dom";
 
 const AddGood = () => {
+    const navigate = useNavigate();
     const [goodName, setGoodName] = useState('');
     const [goodDescription, setGoodDescription] = useState('');
     const [goodBrand, setGoodBrand] = useState('');
@@ -20,6 +22,7 @@ const AddGood = () => {
 
             const response = await request('post', '/good/add', newGood);
             console.log('Good added successfully:', response.data);
+            navigate("/price/add");
         } catch (error) {
             console.error('Error adding good:', error);
         }
