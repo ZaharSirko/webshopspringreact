@@ -15,6 +15,8 @@ import GoogleLoginComponent from "../auth/GoogleLoginComponent";
 import AddGood from "../good/AddGood";
 import AddPrice from "../price/AddPrice";
 import EditePrice from "../price/EditePrice";
+import AddGoodToUserCard from "../card/AddGoodToUserCard";
+import Card from "../card/Card";
 
 
 
@@ -35,8 +37,10 @@ const AppContent = () => {
                             <Route path="/good/add" element={<AddGood />} />
                             <Route path="/profile" element={ <ProfileProvider> <Profile/>  </ProfileProvider>} />
                             <Route path="/profile/edit" element={<ProfileProvider>  <EditProfile />  </ProfileProvider>} />
+                            <Route path="/profile/card" element={<Card/>}/>
                             <Route path="/price/add" element={<AddPrice/>}/>
                             <Route path="/price/edite/:priceId" element={<EditePrice/>}/>
+                            <Route path="/good/:id" element={<AddGoodToUserCard/>} />
                         </Routes>
                     </Router>
                 </div>
