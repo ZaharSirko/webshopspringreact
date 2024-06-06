@@ -4,6 +4,7 @@ import { request } from '../../helpers/axios_helper';
 const Card = () => {
     const [cards, setCards] = useState([]);
     const [error, setError] = useState(null);
+    const [notification, setNotification] = useState('');
 
     useEffect(() => {
         const fetchCards = async () => {
@@ -22,6 +23,8 @@ const Card = () => {
     const handleCancel = async (cardId) => {
         try {
             await request('POST', `profile/card/cancel/${cardId}`);
+            setNotification('Good has been successfully removed from your card.');
+            setTimeout(() => setNotification(''), 3000);
             setCards((prevCards) => prevCards.filter((card) => card.id !== cardId));
         } catch (error) {
             console.error('Error canceling card:', error);
@@ -39,6 +42,11 @@ const Card = () => {
 
     return (
         <div className="container">
+            {notification && (
+                <div className="notification-box">
+                    {notification}
+                </div>
+            )}
             <h1>Cart</h1>
             {cards.map((card) => (
                 <div key={card.id} className="row">

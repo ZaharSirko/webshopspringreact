@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { request } from '../../helpers/axios_helper';
-import {useParams} from "react-router-dom";
-import {useAuth} from "../auth/AuthProvider";
+import { useParams } from "react-router-dom";
+import { useAuth } from "../auth/AuthProvider";
 
 const GoodDetail = () => {
     const { id } = useParams();
     const [good, setGood] = useState(null);
-    const { isAuthenticated  } = useAuth();
+    const { isAuthenticated } = useAuth();
+    const [notification, setNotification] = useState('');
 
     useEffect(() => {
         const fetchGood = async () => {
@@ -21,8 +22,26 @@ const GoodDetail = () => {
         fetchGood();
     }, [id]);
 
+    const handleAddToCard = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await request('POST', `/good/${id}`);
+            if (response.data === true) {
+                setNotification('Good has been successfully added to your card.');
+                setTimeout(() => setNotification(''), 3000);
+            }
+        } catch (error) {
+            console.error('Error adding good to card:', error);
+        }
+    };
+
     return (
         <div className="container">
+            {notification && (
+                <div className="notification-box">
+                    {notification}
+                </div>
+            )}
             {good ? (
                 <div>
                     <h2>Good Details</h2>
@@ -62,7 +81,7 @@ const GoodDetail = () => {
 
                             {isAuthenticated ? (
                                 <form action={`/good/${id}`} method="post">
-                                    <button type="submit" className="btn btn-primary">Add</button>
+                                    <button type="submit" onClick={handleAddToCard} className="btn btn-primary">Add</button>
                                 </form>
                             ) : (
                                 <div>

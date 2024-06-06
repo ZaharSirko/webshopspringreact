@@ -1,21 +1,26 @@
 import React, { useState } from 'react';
-import {setAuthHeader, request} from "../../helpers/axios_helper";
 import { useNavigate } from 'react-router-dom';
-import {useAuth} from "./AuthProvider";
-
+import { useAuth } from "./AuthProvider";
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
     const navigate = useNavigate();
     const { login } = useAuth();
+
     const handleLogin = async (e) => {
         e.preventDefault();
-        await login(email, password);
-        navigate("/")
-    };
-    const handleGoogleLogin = () => {
-        window.location.href = 'http://localhost:8080/oauth2/authorization/google';
+        try {
+            const response = await login(email, password);
+            if (response.status === false) {
+                setError(response.message || 'Login failed');
+            } else {
+                navigate("/");
+            }
+        } catch (error) {
+            setError('Email or password was incorrect!.');
+        }
     };
 
     return (
@@ -32,6 +37,7 @@ const Login = () => {
                         </svg>
                         Log in
                     </h2>
+                    {error && <div className="alert alert-danger">{error}</div>}
                     <form onSubmit={handleLogin} className="needs-validation" noValidate>
                         <div className="form-group">
                             <label htmlFor="username">Login</label>
@@ -66,15 +72,6 @@ const Login = () => {
                                 Don't have an account? <a href="/sign-in">Register here</a>
                             </small>
                         </div>
-                        {/*<div className="ui basic segment fluid container">*/}
-                        {/*    <div className="ui vertical fluid wrapping spaced buttons">*/}
-                        {/*        <button type="button" className="ui fluid large basic secondary button"*/}
-                        {/*                onClick={handleGoogleLogin}>*/}
-                        {/*            <i className="google icon"></i>*/}
-                        {/*            Sign in via Google*/}
-                        {/*        </button>*/}
-                        {/*    </div>*/}
-                        {/*</div>*/}
                         <button type="submit" className="btn btn-primary btn-block mt-4">Log in</button>
                     </form>
                 </div>
