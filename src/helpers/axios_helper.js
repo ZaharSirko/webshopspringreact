@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const TOKEN_EXPIRY_TIME = 60*60*1000; // Час у мілісекундах, наприклад 1 година (3600000 мс)
+const TOKEN_EXPIRY_TIME = 60*60*1000;
 
 export const getAuthToken = () => {
     const token = window.localStorage.getItem('auth_token');
@@ -34,7 +34,6 @@ export const clearAuthHeader = () => {
 };
 
 axios.defaults.baseURL = 'http://localhost:8080';
-// axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 export const request = (method, url, data) => {
     let headers = {};
@@ -51,7 +50,6 @@ export const request = (method, url, data) => {
     });
 };
 
-// Запускаємо перевірку на кожні 10 хвилин (600000 мс)
 setInterval(() => {
     getAuthToken();
 }, 60*60*1000);

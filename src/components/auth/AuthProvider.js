@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import {clearAuthHeader, request, setAuthHeader} from '../../helpers/axios_helper';
+import {clearAuthHeader, getAuthToken, request, setAuthHeader} from '../../helpers/axios_helper';
 
 const AuthContext = createContext();
 
@@ -8,15 +8,11 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+
     useEffect(() => {
-        const checkAuthStatus = async () => {
-            try {
-                const response = await request('get', '/profile/status');
-                setIsAuthenticated(response.data);
-            } catch (error) {
-                console.error('Error checking auth status:', error);
-                setIsAuthenticated(false);
-            }
+        const checkAuthStatus = () => {
+            const token = getAuthToken();
+            setIsAuthenticated(!!token);
         };
 
         checkAuthStatus();
