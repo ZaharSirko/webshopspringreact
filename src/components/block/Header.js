@@ -1,18 +1,51 @@
-import * as React from 'react';
-import { clearAuthHeader } from '../../helpers/axios_helper';
-import {useAuth} from "../auth/AuthProvider";
-import {useLocation, useNavigate} from 'react-router-dom';
-
+import React, { useState, useEffect } from 'react';
+import { useAuth } from "../auth/AuthProvider";
+import { request } from '../../helpers/axios_helper';
+import { useNavigate } from 'react-router-dom';
 
 export default function Header(props) {
-    const { isAuthenticated,logout  } = useAuth();
-    const location = useLocation();
+    const { isAuthenticated, logout } = useAuth();
+    const [query, setQuery] = useState('');
+    const [suggestions, setSuggestions] = useState([]);
     const navigate = useNavigate();
-    const handleLogout = () => {
-        clearAuthHeader();
-       navigate(location.pathname);
+
+    useEffect(() => {
+        const fetchSuggestions = async () => {
+            if (query.length > 0) {
+                try {
+                    const response = await request('get', `/good/search-suggestions?query=${query}`);
+                    setSuggestions(response.data);
+                } catch (error) {
+                    console.error("There was an error fetching search suggestions!", error);
+                }
+            } else {
+                setSuggestions([]);
+            }
+        };
+
+        fetchSuggestions();
+    }, [query]);
+
+    const handleSearch = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await request('get', `/good/search?query=${query}`);
+            if (response.data !== "") {
+                const goodId = response.data;
+                setSuggestions([]);
+                navigate(`/good/${goodId}`);
+            } else {
+                console.log("No results found");
+            }
+        } catch (error) {
+            console.error("There was an error searching for goods!", error);
+        }
     };
 
+    const handleSuggestionClick = (suggestion) => {
+        setSuggestions([]);
+        setQuery(suggestion);
+    };
     return (
         <header className="p-3 mb-3 border-bottom">
             <div className="container">
@@ -29,11 +62,29 @@ export default function Header(props) {
 
                     {/* Search */}
                     <ul className="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                        <form className="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
-                            <input type="search" className="form-control" placeholder="Search..." aria-label="Search"/>
+                        <form className="d-flex col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3 position-relative" role="search" onSubmit={handleSearch}>
+                            <input
+                                type="search"
+                                className="form-control"
+                                placeholder="Search..."
+                                aria-label="Search"
+                                value={query}
+                                onChange={(e) => setQuery(e.target.value)
+                            }
+
+                            />
+                            <button type="submit" className="btn btn-primary">Search</button>
+                            {suggestions.length > 0 && (
+                                <ul className="dropdown-menu show position-absolute" style={{ top: '100%', left: 0, right: 0 }}>
+                                    {suggestions.map((suggestion, index) => (
+                                        <li key={index} className="dropdown-item"  onClick={() => handleSuggestionClick(suggestion)}>
+                                            {suggestion}
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
                         </form>
                     </ul>
-
 
                     {isAuthenticated && (
                         <a href="/profile/card">
@@ -80,5 +131,4 @@ export default function Header(props) {
             </div>
         </header>
     );
-};
-
+}
