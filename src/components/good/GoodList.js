@@ -1,22 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { request } from '../../helpers/axios_helper';
 import {Link} from "react-router-dom";
+import {useGoods} from "./GoodContext";
 
 const GoodList = () => {
-    const [goods, setGoods] = useState([]);
-
-    useEffect(() => {
-        const fetchGoods = async () => {
-            try {
-                const response = await request('GET', '/');
-                setGoods(response.data);
-            } catch (error) {
-                console.error('Error fetching goods:', error);
-            }
-        };
-
-        fetchGoods();
-    }, []);
+    const {goods} = useGoods();
 
     return (
         <div>

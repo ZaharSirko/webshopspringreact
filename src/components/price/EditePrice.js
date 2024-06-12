@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import {hasRoleAdmin, request} from '../../helpers/axios_helper';
-import {useNavigate, useParams} from 'react-router-dom';
+import {useParams} from 'react-router-dom';
 import NoRoleAdminButton from "../block/NoRoleAdminButton";
     const EditePrice = () => {
         const isAdmin = hasRoleAdmin();
         const { priceId } = useParams();
-    const [goods, setGoods] = useState([]);
     const [price, setPrice] = useState({
         good_id: null,
         supplier_price: '',
@@ -16,18 +15,9 @@ import NoRoleAdminButton from "../block/NoRoleAdminButton";
 
     useEffect(() => {
         if(isAdmin){
-            fetchAvailableGoods();
             fetchPrice();}
     }, [priceId]);
 
-    const fetchAvailableGoods = async () => {
-        try {
-            const response = await request('GET', `/`);
-            setGoods(response.data);
-        } catch (error) {
-            console.error('Error fetching available goods:', error);
-        }
-    };
 
     const fetchPrice = async () => {
         try {
@@ -43,14 +33,6 @@ import NoRoleAdminButton from "../block/NoRoleAdminButton";
         setPrice({
             ...price,
             [name]: value
-        });
-    };
-
-    const handleGoodChange = (e) => {
-        const selectedGood = goods.find(good => good.id === parseInt(e.target.value));
-        setPrice({
-            ...price,
-            good: selectedGood
         });
     };
 
@@ -72,20 +54,13 @@ import NoRoleAdminButton from "../block/NoRoleAdminButton";
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
                     <label>Good:</label>
-                    <select
+                    <input
+                        type="text"
                         className="form-control"
                         name="good_id"
-                        onChange={handleGoodChange}
-                        value={price.good_id ? price.good_id.id : ''}
-                        required
-                    >
-                        <option value="">Select a Good</option>
-                        {goods.map((good) => (
-                            <option key={good.id} value={good.id}>
-                                {`${good.goodName} (Good Name), ${good.goodBrand} (Good Brand)`}
-                            </option>
-                        ))}
-                    </select>
+                        value={price.good_id ? price.good_id.goodName : ''}
+                        readOnly
+                    />
                 </div>
                 <div className="form-group">
                     <label>Supplier Price:</label>
@@ -141,6 +116,6 @@ import NoRoleAdminButton from "../block/NoRoleAdminButton";
             }
         </div>
     );
-};
+    };
 
 export default EditePrice;

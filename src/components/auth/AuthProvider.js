@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import {clearAuthHeader, getAuthToken, request, setAuthHeader} from '../../helpers/axios_helper';
+import {useNavigate} from "react-router-dom";
 
 const AuthContext = createContext();
 
@@ -7,7 +8,6 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-
 
     useEffect(() => {
         const checkAuthStatus = () => {

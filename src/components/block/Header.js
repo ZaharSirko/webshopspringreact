@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from "../auth/AuthProvider";
 import { request } from '../../helpers/axios_helper';
-import { useNavigate } from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 
 export default function Header(props) {
     const { isAuthenticated, logout } = useAuth();
@@ -112,7 +112,7 @@ export default function Header(props) {
                                     </li>
                                     <hr className="dropdown-divider"/>
                                     <li>
-                                        <button className="dropdown-item" onClick={logout}>Sign out</button>
+                                        <Link to={`/`} onClick={logout} className="dropdown-item">Sign out</Link>
                                     </li>
                                 </>
                             ) : (

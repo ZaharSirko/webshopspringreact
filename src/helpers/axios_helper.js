@@ -25,7 +25,7 @@ export const hasRoleAdmin = () => {
     const token = getAuthToken();
     if (token) {
         const decodedToken = jwtDecode(token);
-        return decodedToken.roles && decodedToken.roles.includes('ROLE_ADMIN');
+        return decodedToken.authorities && decodedToken.authorities.includes('ROLE_ADMIN');
     }
     return false;
 };

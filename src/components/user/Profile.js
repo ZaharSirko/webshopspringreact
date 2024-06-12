@@ -1,17 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { request } from '../../helpers/axios_helper';
+import {hasRoleAdmin, request} from '../../helpers/axios_helper';
 import EditProfile from "./EditProfile";
 import {Link} from "react-router-dom";
 import {useProfile} from "./ProfileContext";
 
 const Profile = () => {
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState('');
     const { profile } = useProfile();
-
-
-
-
+    const isAdmin = hasRoleAdmin();
     return (
         <main className="container mt-4">
             <div className="row gutters-sm">
@@ -19,8 +14,10 @@ const Profile = () => {
                     <div className="card">
                         <div className="card-body">
                             <div className="list-group list-group-flush account-settings-links">
-                                <a className="list-group-item list-group-item-action" href={`/profile/`}>General</a>
-                                <a className="list-group-item list-group-item-action" href={`/profile/credit-cards`}>Credit card</a>
+                                <a className="list-group-item list-group-item-action" href={`/profile`}>General</a>
+                                {isAdmin && (
+                                    <Link to="/profile/Admin-panel" className="list-group-item list-group-item-action">Admin panel</Link>
+                                )}
                             </div>
                         </div>
                     </div>
