@@ -1,28 +1,38 @@
+import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
-
-const TOKEN_EXPIRY_TIME = 60*60*1000;
+import {useNavigate} from "react-router-dom";
 
 export const getAuthToken = () => {
     const token = window.localStorage.getItem('auth_token');
-    const tokenExpiry = window.localStorage.getItem('auth_token_expiry');
-
-    if (token && tokenExpiry) {
-        const now = new Date().getTime();
-        if (now >= tokenExpiry) {
+    if (token) {
+        try {
+            const decodedToken = jwtDecode(token);
+            const now = Date.now() / 1000;
+            if (decodedToken.exp < now) {
+                clearAuthHeader();
+                return null;
+            }
+            return token;
+        } catch (e) {
             clearAuthHeader();
             return null;
         }
-        return token;
     }
     return null;
 };
 
+export const hasRoleAdmin = () => {
+    const token = getAuthToken();
+    if (token) {
+        const decodedToken = jwtDecode(token);
+        return decodedToken.roles && decodedToken.roles.includes('ROLE_ADMIN');
+    }
+    return false;
+};
+
 export const setAuthHeader = (token) => {
     if (token !== null) {
-        const now = new Date().getTime();
-        const expiryTime = now + TOKEN_EXPIRY_TIME;
         window.localStorage.setItem("auth_token", token);
-        window.localStorage.setItem("auth_token_expiry", expiryTime);
     } else {
         clearAuthHeader();
     }
@@ -30,7 +40,6 @@ export const setAuthHeader = (token) => {
 
 export const clearAuthHeader = () => {
     window.localStorage.removeItem("auth_token");
-    window.localStorage.removeItem("auth_token_expiry");
 };
 
 axios.defaults.baseURL = 'http://localhost:8080';
@@ -39,7 +48,7 @@ export const request = (method, url, data) => {
     let headers = {};
     const token = getAuthToken();
     if (token) {
-        headers = {'Authorization': `Bearer ${token}`};
+        headers = { 'Authorization': `Bearer ${token}` };
     }
 
     return axios({
@@ -50,6 +59,7 @@ export const request = (method, url, data) => {
     });
 };
 
+
 setInterval(() => {
     getAuthToken();
-}, 60*60*1000);
+}, 60 * 60  * 1000);

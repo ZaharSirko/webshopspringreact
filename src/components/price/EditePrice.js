@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { request } from '../../helpers/axios_helper';
-import { useParams } from 'react-router-dom';
+import {hasRoleAdmin, request} from '../../helpers/axios_helper';
+import {useNavigate, useParams} from 'react-router-dom';
+import NoRoleAdminButton from "../block/NoRoleAdminButton";
     const EditePrice = () => {
+        const isAdmin = hasRoleAdmin();
         const { priceId } = useParams();
     const [goods, setGoods] = useState([]);
     const [price, setPrice] = useState({
@@ -13,8 +15,9 @@ import { useParams } from 'react-router-dom';
     });
 
     useEffect(() => {
-        fetchAvailableGoods();
-        fetchPrice();
+        if(isAdmin){
+            fetchAvailableGoods();
+            fetchPrice();}
     }, [priceId]);
 
     const fetchAvailableGoods = async () => {
@@ -62,6 +65,8 @@ import { useParams } from 'react-router-dom';
     };
 
     return (
+        <div>
+            {isAdmin ? (
         <div className="container">
             <h2>Edit Price</h2>
             <form onSubmit={handleSubmit}>
@@ -130,6 +135,10 @@ import { useParams } from 'react-router-dom';
                     Submit
                 </button>
             </form>
+        </div>
+            ) : (
+                <NoRoleAdminButton/>)
+            }
         </div>
     );
 };
