@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import {clearAuthHeader, getAuthToken, request, setAuthHeader} from '../../helpers/axios_helper';
-import {useNavigate} from "react-router-dom";
 
 const AuthContext = createContext();
 

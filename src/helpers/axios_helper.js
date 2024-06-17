@@ -1,6 +1,5 @@
 import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
-import {useNavigate} from "react-router-dom";
 
 export const getAuthToken = () => {
     const token = window.localStorage.getItem('auth_token');

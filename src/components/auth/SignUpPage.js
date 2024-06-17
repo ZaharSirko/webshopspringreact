@@ -1,11 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import useHistory hook
-import {
-    MDBContainer,
-    MDBInput,
-    MDBBtn,
-} from 'mdb-react-ui-kit';
+import { useNavigate } from 'react-router-dom';
+import {request} from "../../helpers/axios_helper";
 
 function SignupPage() {
     const [email, setEmail] = useState('');
@@ -25,14 +20,14 @@ function SignupPage() {
                 throw new Error("Passwords do not match");
             }
 
-            const response = await axios.post('http://localhost:8080/sign-in', {
+            const response = await request("post",'http://localhost:8080/sign-in', {
                 email,
                 password,
             });
             console.log(response.data);
             history('/');
         } catch (error) {
-            // Handle signup error
+
             console.error('Signup failed:', error.response ? error.response.data : error.message);
             setError(error.response ? error.response.data : error.message);
         }
@@ -40,27 +35,51 @@ function SignupPage() {
 
     return (
         <div className="d-flex justify-content-center align-items-center vh-100">
-            <div className="border rounded-lg p-4" style={{width: '600px', height: 'auto'}}>
-                <MDBContainer className="p-3">
+            <div className="border rounded-lg p-4" style={{ width: '600px', height: 'auto' }}>
+                <div className="p-3">
                     <h2 className="mb-4 text-center">Sign Up Page</h2>
                     {error && <p className="text-danger">{error}</p>}
-                    <MDBInput wrapperClass='mb-3' placeholder='Email Address' id='email' value={email} type='email'
-                              onChange={(e) => setEmail(e.target.value)}/>
-                    <MDBInput wrapperClass='mb-3' placeholder='Password' id='password' type='password' value={password}
-                              onChange={(e) => setPassword(e.target.value)}/>
-                    <MDBInput wrapperClass='mb-3' placeholder='Confirm Password' id='matchingPassword' type='password'  value={matchingPassword}
-                              onChange={(e) => setConfirmPassword(e.target.value)}/>
-
-                    <button className="mb-4 d-block mx-auto fixed-action-btn btn-primary"
-                            style={{height: '40px', width: '100%'}}
-                            onClick={handleSignup}>Sign Up
+                    <div className="mb-3">
+                        <input
+                            type="email"
+                            className="form-control"
+                            id="email"
+                            placeholder="Email Address"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                    </div>
+                    <div className="mb-3">
+                        <input
+                            type="password"
+                            className="form-control"
+                            id="password"
+                            placeholder="Password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                    </div>
+                    <div className="mb-3">
+                        <input
+                            type="password"
+                            className="form-control"
+                            id="matchingPassword"
+                            placeholder="Confirm Password"
+                            value={matchingPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                        />
+                    </div>
+                    <button
+                        className="btn btn-primary mb-4 d-block mx-auto"
+                        style={{ height: '40px', width: '100%' }}
+                        onClick={handleSignup}
+                    >
+                        Sign Up
                     </button>
-
                     <div className="text-center">
                         <p>Already Register? <a href="/log-in">Login</a></p>
                     </div>
-
-                </MDBContainer>
+                </div>
             </div>
         </div>
     );

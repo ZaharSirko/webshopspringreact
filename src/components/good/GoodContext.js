@@ -30,4 +30,3 @@ export const GoodsProvider = ({ children }) => {
     );
 };
 
-export default GoodsContext;

@@ -1,12 +1,11 @@
 import React from 'react';
-import {BrowserRouter as Router, Navigate, Route, Routes} from 'react-router-dom';
+import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import Profile from '../user/Profile';
 import GoodList from '../good/GoodList';
 import GoodDetail from '../good/GoodDetails';
 import LoginPage from '../auth/LoginPage';
 import SignupPage from '../auth/SignUpPage';
 import Header from "../block/Header";
-
 import EditProfile from "../user/EditProfile";
 import {AuthProvider} from "../auth/AuthProvider";
 import {ProfileProvider} from "../user/ProfileContext";
@@ -17,8 +16,7 @@ import AddGoodToUserCard from "../card/AddGoodToUserCard";
 import Card from "../card/Card";
 import {GoodsProvider} from "../good/GoodContext";
 import AdminPanel from "../user/AdminPanel";
-
-
+import Footer from "../block/Footer";
 
 
 const AppContent = () => {
@@ -41,11 +39,11 @@ const AppContent = () => {
                             <Route path="/price/edit/:priceId" element={<EditePrice/>}/>
                             <Route path="/good/:id" element={<AddGoodToUserCard/>} />
                         </Routes>
+                        <Footer/>
                     </Router>
                 </div>
         </AuthProvider>
     );
 };
-
-
 export default AppContent;
+
